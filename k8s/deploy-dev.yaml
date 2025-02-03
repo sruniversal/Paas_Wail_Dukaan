@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pass-wali-dukan-app
+  labels:
+    app: pass-wali-dukan-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pass-wali-dukan-app
+  template:
+    metadata:
+      labels:
+        app: pass-wali-dukan-app
+    spec:
+      containers:
+      - name: pass-wali-dukan-app
+        image: docker.io/mangesh32/pass-wali-dukan:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://db:3306/ecommerce_db"
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          value: "com.mysql.cj.jdbc.Driver"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "root"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+        - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+          value: "org.hibernate.dialect.MySQL8Dialect"
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "update"
+        - name: SPRING_MAIL_HOST
+          value: "smtp.mailtrap.io"
+        - name: SPRING_MAIL_USERNAME
+          value: "myemail@mailtrap.io"
+        - name: SPRING_MAIL_PASSWORD
+          value: "myemailpassword"
+        - name: SPRING_MAIL_PORT
+          value: "587"
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+          value: "true"
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+          value: "true"
+        - name: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
+          value: "2MB"
+        - name: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+          value: "2MB"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pass-wali-dukan-app-service
+spec:
+  selector:
+    app: pass-wali-dukan-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000      # External port (accessible on localhost)
+  type: NodePort       # Expose the service externally
