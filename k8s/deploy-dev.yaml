@@ -21,23 +21,38 @@ spec:
         - containerPort: 8080
         env:
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://db:3306/ecommerce_db"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_DATASOURCE_URL
         - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
           value: "com.mysql.cj.jdbc.Driver"
         - name: SPRING_DATASOURCE_USERNAME
-          value: "root"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_DATASOURCE_USERNAME
         - name: SPRING_DATASOURCE_PASSWORD
-          value: "1234"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_DATASOURCE_PASSWORD
         - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
           value: "org.hibernate.dialect.MySQL8Dialect"
         - name: SPRING_JPA_HIBERNATE_DDL_AUTO
           value: "update"
         - name: SPRING_MAIL_HOST
-          value: "smtp.mailtrap.io"
+          value: "sandbox.smtp.mailtrap.io"
         - name: SPRING_MAIL_USERNAME
-          value: "myemail@mailtrap.io"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_MAIL_USERNAME
         - name: SPRING_MAIL_PASSWORD
-          value: "myemailpassword"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_MAIL_PASSWORD
         - name: SPRING_MAIL_PORT
           value: "587"
         - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
@@ -58,7 +73,6 @@ spec:
     app: pass-wali-dukan-app
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
-      nodePort: 30000      # External port (accessible on localhost)
-  type: NodePort       # Expose the service externally
+  type: LoadBalancer

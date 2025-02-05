@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: db
+  name: mysqldb
 spec:
-  serviceName: "db"
+  serviceName: "mysqldb"
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: mysqldb
   template:
     metadata:
       labels:
-        app: db
+        app: mysqldb
     spec:
       containers:
-      - name: db
+      - name: mysqldb
         image: mysql:8
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "1234"
+          value: "<password>"
         - name: MYSQL_DATABASE
-          value: "ecommerce_db"
+          value: "<database>"
         ports:
         - containerPort: 3306
         volumeMounts:
@@ -33,15 +33,16 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
+      storageClassName: gp2
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: db
+  name: mysqldb
 spec:
   ports:
     - port: 3306
   clusterIP: None  # Headless service to allow stable network identities for StatefulSet
   selector:
-    app: db
+    app: mysqldb
