@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'docker-agent'
-            defaultContainer 'docker'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = 'mangesh32/pass-wali-dukan'
