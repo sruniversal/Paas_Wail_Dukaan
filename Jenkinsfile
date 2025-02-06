@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'ironman'
-            agentContainer 'jnlp'
-            defaultContainer 'docker'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = 'mangesh32/pass-wali-dukan'
