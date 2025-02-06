@@ -2,11 +2,8 @@ pipeline {
     agent {
         kubernetes {
             label 'ironman'
-            defaultContainer 'jnlp'
-            containers {
-                docker {
-                }
-            }
+            agentContainer 'jnlp'
+            defaultContainer 'docker'
         }
     }
 
