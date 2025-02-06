@@ -18,9 +18,12 @@ spec:
         image: mysql:8
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "<password>"
+          valueFrom:
+            secretKeyRef:
+              name: pwd-secrets
+              key: SPRING_DATASOURCE_PASSWORD
         - name: MYSQL_DATABASE
-          value: "<database>"
+          value: "ecommerce_db"
         ports:
         - containerPort: 3306
         volumeMounts:
@@ -34,7 +37,6 @@ spec:
       resources:
         requests:
           storage: 2Gi
-      storageClassName: gp2
 ---
 apiVersion: v1
 kind: Service

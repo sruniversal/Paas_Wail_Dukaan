@@ -1,9 +1,13 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            label 'docker-agent'
+            defaultContainer 'docker'
+        }
+    }
 
     environment {
         DOCKER_IMAGE = 'mangesh32/pass-wali-dukan'
-        DOCKER_CREDENTIALS_ID = 'container-registry-creds'
     }
 
     stages {
@@ -29,10 +33,8 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
-                        docker.image(env.IMAGE_TAG).push()
-                        docker.image(env.IMAGE_TAG_COMMIT).push()
-                    }
+                    docker.image(env.IMAGE_TAG).push()
+                    docker.image(env.IMAGE_TAG_COMMIT).push()
                 }
             }
         }
