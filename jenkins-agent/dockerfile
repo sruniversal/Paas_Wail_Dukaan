@@ -1,0 +1,23 @@
+# Use jenkins inbound agent as the base image
+FROM jenkins/inbound-agent:3283.v92c105e0f819-7
+
+# Install Docker
+USER root
+
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    && curl -fsSL https://get.docker.com -o get-docker.sh \
+    && sh get-docker.sh \
+    && rm get-docker.sh
+
+# Add Jenkins user to Docker group
+RUN usermod -aG docker jenkins
+
+# Enable DinD
+RUN mkdir -p /var/lib/docker
+VOLUME /var/lib/docker
