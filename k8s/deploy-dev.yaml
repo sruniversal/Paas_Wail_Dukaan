@@ -64,6 +64,14 @@ spec:
           value: "2MB"
         - name: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
           value: "2MB"
+        volumeMounts:
+        - name: docker-storage
+          mountPath: /var/lib/docker  # Mount Docker image storage
+      volumes:
+      - name: docker-storage
+        hostPath:
+          path: /var/lib/docker  # Use host's Docker storage
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
