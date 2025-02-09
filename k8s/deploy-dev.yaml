@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: pass-wali-dukan-app
-        image: docker.io/mangesh32/pass-wali-dukan:latest
+        image: <REPLACE_PWD_IMAGE>
         ports:
         - containerPort: 8080
         env:

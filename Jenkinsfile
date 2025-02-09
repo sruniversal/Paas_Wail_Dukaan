@@ -24,26 +24,17 @@ pipeline {
             }
         }
 
-        stage('Push Image') {
-            steps {
-                script {
-                    docker.image(env.IMAGE_TAG_COMMIT).push()
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 script {
                     def deploymentFile = (env.BRANCH_NAME == 'master') ? 'k8s/deploy-master.yaml' : 'k8s/deploy-dev.yaml'
-
-                    sh """
-                        sed -i 's|REPLACE_IMAGE|${DOCKER_REPO}:${IMAGE_TAG}|g' ${deploymentFile}
-                    """
-
-                    kubernetesDeploy(
-                        configs: [deploymentFile]
-                    )
+                	withKubeConfig([credentialsId: 'jenkins-kubeconfig']) {
+                        sh """
+                            sed -i 's|<REPLACE_PWD_IMAGE>|docker.io/${DOCKER_IMAGE}:${IMAGE_TAG_COMMIT}|g' ${deploymentFile}
+                            cat ${deploymentFile}
+                            kubectl apply -f ${deploymentFile}
+                        """
+                    }
                 }
             }
         }

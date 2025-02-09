@@ -18,6 +18,10 @@ RUN echo \
 RUN apt-get update
 RUN apt-get install -y docker-ce-cli docker-buildx-plugin
 
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
 # Configure Docker to run as non-root user
 RUN groupadd docker
 RUN usermod -aG docker jenkins
