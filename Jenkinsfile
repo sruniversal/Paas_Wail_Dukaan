@@ -16,10 +16,9 @@ pipeline {
                     def imageTagCommit = "${DOCKER_IMAGE}:${branchName}-${commitHash}"
 
                     // Use Docker Pipeline Plugin for building and tagging
-                    docker.build(imageTag).tag(imageTagCommit)
+                    docker.build(imageTagCommit)
                     
                     // Store image tags for later use
-                    env.IMAGE_TAG = imageTag
                     env.IMAGE_TAG_COMMIT = imageTagCommit
                 }
             }
@@ -28,7 +27,6 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    docker.image(env.IMAGE_TAG).push()
                     docker.image(env.IMAGE_TAG_COMMIT).push()
                 }
             }
@@ -38,6 +36,11 @@ pipeline {
             steps {
                 script {
                     def deploymentFile = (env.BRANCH_NAME == 'master') ? 'k8s/deploy-master.yaml' : 'k8s/deploy-dev.yaml'
+
+                    sh """
+                        sed -i 's|REPLACE_IMAGE|${DOCKER_REPO}:${IMAGE_TAG}|g' ${deploymentFile}
+                    """
+
                     kubernetesDeploy(
                         configs: [deploymentFile]
                     )
