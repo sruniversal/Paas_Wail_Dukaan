@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'mangesh32/pass-wali-dukan'
+        DOCKER_IMAGE = 'pass-wali-dukan'
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
                     def deploymentFile = (env.BRANCH_NAME == 'master') ? 'k8s/deploy-master.yaml' : 'k8s/deploy-dev.yaml'
                 	withKubeConfig([credentialsId: 'jenkins-kubeconfig']) {
                         sh """
-                            sed -i 's|<REPLACE_PWD_IMAGE>|docker.io/${DOCKER_IMAGE}:${IMAGE_TAG_COMMIT}|g' ${deploymentFile}
+                            sed -i 's|<REPLACE_PWD_IMAGE>|${IMAGE_TAG_COMMIT}|g' ${deploymentFile}
                             cat ${deploymentFile}
                             kubectl apply -f ${deploymentFile}
                         """

@@ -17,6 +17,7 @@ spec:
       containers:
       - name: pass-wali-dukan-app
         image: <REPLACE_PWD_IMAGE>
+        imagePullPolicy: Never
         ports:
         - containerPort: 8080
         env:
