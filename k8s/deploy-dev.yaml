@@ -72,7 +72,12 @@ spec:
   selector:
     app: pass-wali-dukan-app
   ports:
-    - protocol: TCP
-      port: 3000
+    - name: http
+      protocol: TCP
+      port: 80
       targetPort: 8080
-  type: ClusterIP
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
