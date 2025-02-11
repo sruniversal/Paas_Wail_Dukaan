@@ -2,3 +2,4 @@
 .mvn/
 target/
 secrets
+k8s/container-registry
